@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}SummBug{% endblock %}
+
+{% block content %}
+<div id="loading-status">
+  <div class="alert alert-info" id="loading-text">
+    Loading bug from {{project}}...
+  </div>
+</div>
+
+{% block conten %}
+<div id="summary"></div>
+{% endblock %}
+
+<script>
+  $("#summary").load(window.location.href + "?load", function(response, status) {
+    $("#loading-status").slideUp(400);
+  });
+  setTimeout('$("#loading-text").text("Summarizing bug...")', 2500);
+</script>
+{% endblock %}

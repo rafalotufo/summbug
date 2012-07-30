@@ -55,22 +55,30 @@ def thread_to_sentences(thread):
 
 class MainHandler(webapp2.RequestHandler):
     def get(self, project, bug_id):
-        bug = get_bug(project, int(bug_id))
-        sents = split_sentences(bug)
+        if 'load' in self.request.GET:
+            bug = get_bug(project, int(bug_id))
+            sents = split_sentences(bug)
 
-        summarizer = lexrank.LexrankSummarizer()
-        summary,_ = summarizer.summarize(sents, target_wc_perc=0.25, title=bug.title)
-        in_summary = set(s.id for s in summary)
+            summarizer = lexrank.LexrankSummarizer()
+            summary,_ = summarizer.summarize(sents, target_wc_perc=0.25, title=bug.title)
+            in_summary = set(s.id for s in summary)
 
-        for i,comment_sents in itertools.groupby(sents, key=lambda s: s.id[0]):
-            bug.comments[i].text = [{'text': s.text, 'included': s.id in in_summary} for s in comment_sents]
-            
-        template_values = {
-            'bug': bug
-        }
-        
-        template = jinja_environment.get_template('bug_report.html')
-        self.response.out.write(template.render(template_values))
+            for i,comment_sents in itertools.groupby(sents, key=lambda s: s.id[0]):
+                bug.comments[i].text = [{'text': s.text, 'included': s.id in in_summary} for s in comment_sents]
+
+            template_values = {
+                'bug': bug
+            }
+
+            template = jinja_environment.get_template('bug_report.html')
+            self.response.out.write(template.render(template_values))
+        else:
+            template_values = {
+                'title': '%s %s' % (project, bug_id),
+                'project': project
+            }
+            template = jinja_environment.get_template('loading_bug.html')
+            self.response.out.write(template.render(template_values))
 
 app = webapp2.WSGIApplication([('/([a-zA-Z\-_]*)/([0-9]*)', MainHandler)],
                               debug=True)
