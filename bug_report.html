@@ -40,12 +40,12 @@
       <h1>{{ bug.title }}</h1>
       {% for comment in bug.comments %}
         <div class="comment">
-          <div class="comment-header alert alert-info">
+          <div class="comment-header">
             <span>{{ comment.number }}</span>
             <span>{{ comment.author }}</span>
             <span>{{ comment.date }}</span>
           </div>
-          <pre>{% for sent in comment.text %}<span class="{% if sent.included %}{{'included-sent'}}{% else %}{{'excluded-sent'}}{% endif %}">{{ sent.text }}</span>{% endfor %}</pre>
+          <div class="comment-text"><pre>{% for sent in comment.text %}<span class="{% if sent.included %}{{'included-sent'}}{% else %}{{'excluded-sent'}}{% endif %}">{{ sent.text }}</span>{% endfor %}</pre></div>
         </div>
       {% endfor %}
     </div>
