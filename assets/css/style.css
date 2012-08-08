@@ -1,5 +1,6 @@
 body {
     background-color: #fcfcfc;
+    padding-top: 90px;
 }
 
 .comment {
@@ -34,6 +35,7 @@ body {
 }
 
 .included-sent {
+    color: black;
 }
 
 .excluded-sent {
@@ -43,6 +45,5 @@ body {
 #loading-status {
     margin-right: auto;
     margin-left: auto;
-    width: 300px;
-    margin-top: 10px
+    width: 200px;
 }

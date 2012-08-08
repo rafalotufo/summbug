@@ -3,10 +3,16 @@
 {% block title %}SummBug{% endblock %}
 
 {% block content %}
+<div class="container">
 <div id="loading-status">
-  <div class="alert alert-info" id="loading-text">
+  <div style="margin-top: 50%;"></div>
+  <div class="progress progress-striped active" style="margin-bottom: 5px;">
+    <div class="bar" style="width: 100%;"></div>
+  </div>
+  <div id="loading-text">
     Loading bug from {{project}}...
   </div>
+</div>
 </div>
 
 {% block conten %}
@@ -14,9 +20,19 @@
 {% endblock %}
 
 <script>
-  $("#summary").load(window.location.href + "?load", function(response, status) {
-    $("#loading-status").slideUp(400);
+  $.ajax({
+    type: "GET",
+    url: window.location.href,
+    data: {load: true}
+  }).done(function( msg ) {
+    $("#loading-status").slideUp(600);
+    $("#summary").delay(300).html(msg);
   });
+
+
+  <!-- $("#summary").load(window.location.href + "?load", function(response, status) { -->
+  <!--   $("#loading-status").hide(); -->
+  <!-- }); -->
   setTimeout('$("#loading-text").text("Summarizing bug...")', 2500);
 </script>
 {% endblock %}

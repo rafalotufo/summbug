@@ -67,8 +67,11 @@ class MainHandler(webapp2.RequestHandler):
                 bug.comments[i].text = [{'text': s.text, 'included': s.id in in_summary} for s in comment_sents]
 
             template_values = {
-                'bug': bug
+                'bug': bug,
+                'non_empty_comments': set(c.number for c in bug.comments
+                                          if any(sent['included'] for sent in c.text))
             }
+            logging.info([(c.number, sent) for c in bug.comments for sent in c.text if sent['included']])
 
             template = jinja_environment.get_template('bug_report.html')
             self.response.out.write(template.render(template_values))

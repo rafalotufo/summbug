@@ -1,15 +1,44 @@
 {% block content %}
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <h1 style="margin: 10px 0 10px 0;">{{ bug.title|e }} <a class="btn btn-primary" href="javascript:toggleView()" id="toggleView">View condensed</a></h1>
+          
+        </div>
+      </div>
+    </div>
     <div class="container">
-      <h1>{{ bug.title }}</h1>
       {% for comment in bug.comments %}
-        <div class="comment">
+        <div class="comment {% if comment.number in non_empty_comments %}{{'included-comment'}}{% else %}{{'excluded-comment'}}{% endif %}">
           <div class="comment-header">
             <span>{{ comment.number }}</span>
-            <span>{{ comment.author }}</span>
+            <span>{{ comment.author|e }}</span>
             <span>{{ comment.date }}</span>
           </div>
-          <div class="comment-text"><pre>{% for sent in comment.text %}<span class="{% if sent.included %}{{'included-sent'}}{% else %}{{'excluded-sent'}}{% endif %}">{{ sent.text }}</span>{% endfor %}</pre></div>
+          <div class="comment-text"><pre>{% for sent in comment.text %}<span class="{% if sent.included %}{{'included-sent'}}{% else %}{{'excluded-sent'}}{% endif %}">{{ sent.text|e }}</span>{% endfor %}</pre></div>
         </div>
       {% endfor %}
     </div>
 {% endblock %}
+
+<script>
+  function condensed() {
+    $(".excluded-sent,.excluded-comment").slideUp('slow');
+  }
+  function interlaced() {
+    $(".excluded-sent,.excluded-comment").slideDown('slow').css({display: 'block'});
+  }
+  var currentView = "interlaced";
+  function toggleView() {
+    if (currentView == "interlaced") {
+      condensed();
+      $("#toggleView").text("View " + currentView);
+      currentView = "condensed";
+    }
+    else {
+      interlaced();
+      $("#toggleView").text("View " + currentView);
+      currentView = "interlaced";
+    }
+  }
+</script>
