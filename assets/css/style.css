@@ -42,7 +42,7 @@ body {
     color: #bbb;
 }
 
-#loading-status {
+.loading-status {
     margin-right: auto;
     margin-left: auto;
     width: 200px;

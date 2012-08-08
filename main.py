@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-import webapp2, jinja2, os, itertools, re
+import webapp2, jinja2, os, itertools
 import bugretriever
 from lexrank import bugreport_tokenizer, lexrank
 from lexrank.extractive_summary import Sentence
@@ -56,7 +56,15 @@ def thread_to_sentences(thread):
 class MainHandler(webapp2.RequestHandler):
     def get(self, project, bug_id):
         if 'load' in self.request.GET:
-            bug = get_bug(project, int(bug_id))
+            try:
+                bug = get_bug(project, int(bug_id))
+            except Exception:
+                self.response.out.write('''
+                <div class="container">
+                  <div class="loading-status alert" style="width:200px;">Bug not found</div>
+                </div>''')
+                return
+            
             sents = split_sentences(bug)
 
             summarizer = lexrank.LexrankSummarizer()
