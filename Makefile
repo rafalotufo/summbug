@@ -3,8 +3,8 @@ BR_DIR=~/projects/bug-reports/bugreports/
 UTIL_DIR=~/projects/python-util/util/
 MLTK_DIR=~/projects/mltk/src/mltk/
 
-BR_FILES=$(addprefix $(BR_DIR), bug_retriever.py launchpad_bugs.py mozilla_bugs.py \
-	__init__.py chrome_bugs.py debian_bugs.py bugs.py db.py)
+BR_FILES=$(addprefix $(BR_DIR), bug_retriever.py mozilla_bugs.py mozilla_bug_parser.py \
+	__init__.py debian_bugs.py bugs.py db.py)
 BR_TARGETS=$(addprefix bugreports/, $(notdir $(BR_FILES)))
 
 LEX_FILES=$(addprefix $(LEX_DIR), __init__.py lexrank.py bugreport_tokenizer.py \

@@ -18,7 +18,7 @@ import webapp2, jinja2, os, itertools
 import bugretriever
 from lexrank import bugreport_tokenizer, lexrank
 from lexrank.extractive_summary import Sentence
-import logging
+import logging, traceback
 
 jinja_environment = jinja2.Environment(
         loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
@@ -55,10 +55,15 @@ def thread_to_sentences(thread):
 
 class MainHandler(webapp2.RequestHandler):
     def get(self, project, bug_id):
+        if project.lower() not in ['debian', 'mozilla']:
+            self.response.out.write('Project %s is not yet supported.' % project)
+            return
+        
         if 'load' in self.request.GET:
             try:
                 bug = get_bug(project, int(bug_id))
             except Exception:
+                logging.warn(traceback.format_exc())
                 self.response.out.write('''
                 <div class="container">
                   <div class="loading-status alert" style="width:200px;">Bug not found</div>
@@ -79,7 +84,6 @@ class MainHandler(webapp2.RequestHandler):
                 'non_empty_comments': set(c.number for c in bug.comments
                                           if any(sent['included'] for sent in c.text))
             }
-            logging.info([(c.number, sent) for c in bug.comments for sent in c.text if sent['included']])
 
             template = jinja_environment.get_template('bug_report.html')
             self.response.out.write(template.render(template_values))

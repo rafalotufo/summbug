@@ -25,6 +25,10 @@ def retrieve(project, bug_id):
     if project.lower() == 'debian':
         from bugreports import debian_bugs
         return debian_bugs.DebianBugRetriever(None).retrieve_bug(bug_id)
+    elif project.lower() == 'mozilla':
+        from bugreports import mozilla_bugs
+        from bugreports.mozilla_bug_parser import parse_bug
+        return parse_bug(mozilla_bugs.retrieve_bug_html(bug_id), bug_id, project)
 
 def cached_retriever():
     return partial(with_cache, retrieve, BugCache())
