@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}SummBug{% endblock %}
+
+{% block content %}
+
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <h1 style="margin: 10px 0 10px 0;">SummBug</h1>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <p>
+        SummBug currently summarizes bug reports from Debian and Mozilla projects.
+      </p>
+      <form class="form-inline">
+        Project: 
+        <select id="project" class="input-small">
+          <option value="">Select</option>
+          <option>Debian</option>
+          <option>Mozilla</option>
+        </select>
+        Bug ID:
+        <input type="text" id="bug_id" class="input-small"/>
+        <a href="javascript:summarize();"  class="btn btn-primary" >Summarize Bug</a>
+      </form>
+      For direct access, just access:
+      <ul>
+        <li>http://bugsumm.appspot.com/debian/[bug-id];</li>
+        <li>http://bugsumm.appspot.com/mozilla/[bug-id];</li>
+      </ul>
+    </div>
+
+    <script>
+      function summarize() {
+        var project = $("#project").val();
+        var bug_id = $("#bug_id").val();
+        if (project && bug_id) {
+          var url = "/" + project + "/" + bug_id;
+          window.location.href = url;
+        }
+      }
+    </script>
+{% endblock %}

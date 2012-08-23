@@ -11,7 +11,8 @@ handlers:
 - url: /assets
   static_dir: assets
 
-- url: /[a-zA-Z\-_]*/[0-9]* 
+#- url: /[a-zA-Z\-_]*/[0-9]* 
+- url: /.*
   script: main.app
 - url: /api.*
   script: api.app

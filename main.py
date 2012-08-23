@@ -23,6 +23,16 @@ import logging, traceback
 jinja_environment = jinja2.Environment(
         loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
 
+def handle_404(request, response, exception):
+    logging.exception(exception)
+    response.write('Oops! I could swear this page was here!')
+    response.set_status(404)
+
+def handle_500(request, response, exception):
+    logging.exception(exception)
+    response.write('A server error occurred!')
+    response.set_status(500)
+
 ### user can select section of bug and ask to expand on that
 ### this should show snippets of the top n most related portions of the 
 ### bug just beside it. use can click on snippet, which will scroll
@@ -52,6 +62,10 @@ def thread_to_sentences(thread):
     sentences = [Sentence((i,j), s, thread.id) for i,m in enumerate(thread.messages) for j,s in enumerate(m.sentences)]
     return sentences
 
+class HomeHandler(webapp2.RequestHandler):
+    def get(self):
+        template = jinja_environment.get_template('index.html')
+        self.response.out.write(template.render({}))
 
 class MainHandler(webapp2.RequestHandler):
     def get(self, project, bug_id):
@@ -95,5 +109,9 @@ class MainHandler(webapp2.RequestHandler):
             template = jinja_environment.get_template('loading_bug.html')
             self.response.out.write(template.render(template_values))
 
-app = webapp2.WSGIApplication([('/([a-zA-Z\-_]*)/([0-9]*)', MainHandler)],
+app = webapp2.WSGIApplication([('/([a-zA-Z\-_]*)/([0-9]*)', MainHandler),
+                               ('/(?:index.html)?', HomeHandler)],
                               debug=True)
+app.error_handlers[404] = handle_404
+app.error_handlers[500] = handle_500
+    
